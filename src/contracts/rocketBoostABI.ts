@@ -1,0 +1,26 @@
+export const ROCKET_BOOST_ADDRESS = '0x70D2a5f66Ce2eB20D1B960D82F8e2E8308f5956B';
+
+export const ROCKET_BOOST_ABI = [
+  "function owner() external view returns (address)",
+  "function buyRocket(address token, uint256 points) external payable",
+  "function getScore(address token) external view returns (uint256)",
+  "function pricePerPoint() external view returns (uint256)",
+  "function maxPointsPerTx() external view returns (uint256)",
+  "function paused() external view returns (bool)",
+  "function rocketBanned(address) external view returns (bool)",
+  "function treasury() external view returns (address)",
+  "function factory() external view returns (address)",
+  "function banInRocket(address token, bool wipeScore) external",
+  "function unbanInRocket(address token) external",
+  "function setTreasury(address _treasury) external",
+  "function setParams(uint256 _pricePerPoint, uint256 _maxPointsPerTx) external",
+  "function pause() external",
+  "function unpause() external",
+  "event RocketPurchased(address indexed token, address indexed buyer, uint256 points, uint256 paid, uint256 newRaw)",
+  "event RocketBanned(address indexed token, bool wiped)",
+  "event RocketUnbanned(address indexed token)",
+  "event ParamsUpdated(uint256 pricePerPoint, uint256 maxPointsPerTx)",
+  "event TreasuryChanged(address indexed newTreasury)",
+  "event Paused()",
+  "event Unpaused()"
+];
