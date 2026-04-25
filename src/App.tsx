@@ -266,18 +266,59 @@ export default function App() {
       <footer className="mt-auto border-t border-[#1F2937] bg-[#0B0F14]/80">
         <div className="w-[90%] max-w-[1600px] mx-auto px-4 py-4 flex items-center justify-between gap-3">
           <p className="text-[11px] text-[#6B7280]">© Tota Vault</p>
-          {isPlatformOwner && (
-            <button
-              type="button"
-              onClick={() => navigateWithURL('admin')}
-              title="Platform admin"
-              aria-label="Platform admin"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-red-500/30 bg-red-500/5 text-red-300 hover:bg-red-500/10 transition-colors text-xs"
+
+          <div className="flex items-center gap-2">
+            <a
+              href="https://x.com/Totavault"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Tota Vault on X"
+              aria-label="Tota Vault on X"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#2A3442] bg-[#11161D] text-[#9CA3AF] transition-colors hover:border-vault-primary/60 hover:text-vault-primary"
             >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Admin
-            </button>
-          )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path d="M18.244 2H21.5l-7.51 8.59L22.5 22h-6.844l-5.36-7.01L4.2 22H.94l8.06-9.22L1.5 2h7.02l4.84 6.39L18.244 2zm-1.2 18h1.86L7.06 4H5.1l11.944 16z" />
+              </svg>
+            </a>
+
+            <a
+              href="https://t.me/TOTAVAULT_Official"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Tota Vault on Telegram"
+              aria-label="Tota Vault on Telegram"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#2A3442] bg-[#11161D] text-[#9CA3AF] transition-colors hover:border-vault-primary/60 hover:text-vault-primary"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.146.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.658-.643.135-.953l11.566-4.458c.538-.196 1.006.128.832.938z" />
+              </svg>
+            </a>
+
+            {isPlatformOwner && (
+              <button
+                type="button"
+                onClick={() => navigateWithURL('admin')}
+                title="Platform admin"
+                aria-label="Platform admin"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-red-500/30 bg-red-500/5 text-red-300 hover:bg-red-500/10 transition-colors text-xs"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Admin
+              </button>
+            )}
+          </div>
         </div>
       </footer>
 

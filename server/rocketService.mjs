@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-const DEFAULT_ROCKET = '0x70D2a5f66Ce2eB20D1B960D82F8e2E8308f5956B';
+const DEFAULT_ROCKET = '0x139AeeabE48a3Ac0a465Bf3ACb7d465BAFea09FD';
 
 const ROCKET_ABI = [
   'function getScore(address token) external view returns (uint256)',

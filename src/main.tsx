@@ -22,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
             borderRadius: 'large',
           })}
           modalSize="wide"
+          locale="en-US"
         >
           <Web3Provider>
             <App />

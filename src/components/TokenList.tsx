@@ -65,11 +65,52 @@ function listsEffectivelyEqual(prev: TokenInfo[], next: TokenInfo[]) {
 
 const initialFromCache = readTokenListCache();
 
+type TokenCategory =
+  | "all"
+  | "new"
+  | "cto"
+  | "dividends"
+  | "almost"
+  | "graduated"
+  | "banned";
+
+const CATEGORY_OPTIONS: { value: TokenCategory; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "new", label: "New (24h)" },
+  { value: "cto", label: "CTO" },
+  { value: "dividends", label: "Dividends" },
+  { value: "almost", label: "Almost Graduated" },
+  { value: "graduated", label: "Graduated" },
+  { value: "banned", label: "Banned" },
+];
+
+const ONE_DAY_SECONDS = 24 * 60 * 60;
+
+function isCtoToken(t: TokenInfo) {
+  return (Number(t.firstBuyLockTier) || 0) > 0;
+}
+
+function isAlmostGraduated(t: TokenInfo) {
+  if (t.graduated) return false;
+  const current = parseFloat(t.realETH);
+  const target = parseFloat(t.graduationTargetEth ?? "13");
+  const t0 = Number.isFinite(target) && target > 0 ? target : 13;
+  if (!Number.isFinite(current)) return false;
+  return current / t0 >= 0.5;
+}
+
+function isNewToken(t: TokenInfo) {
+  const createdAt = Number(t.createdAt) || 0;
+  if (!createdAt) return false;
+  const nowSec = Math.floor(Date.now() / 1000);
+  return nowSec - createdAt <= ONE_DAY_SECONDS;
+}
+
 export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrigger, searchTerm, onSearchChange, onTokensLoaded }) => {
   const [tokens, setTokens] = useState<TokenInfo[]>(() => initialFromCache ?? []);
   const [loading, setLoading] = useState(() => (initialFromCache?.length ?? 0) === 0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [filterGraduated, setFilterGraduated] = useState(false);
+  const [filterCategory, setFilterCategory] = useState<TokenCategory>("all");
   const [loadDiag, setLoadDiag] = useState<TokenListLoadDiag | null>(null);
 
   const { getAllTokens } = useContracts();
@@ -142,6 +183,31 @@ export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrig
     };
   }, []); // polling não depende da conexão
 
+  const categoryCounts = useMemo(() => {
+    const counts: Record<TokenCategory, number> = {
+      all: 0,
+      new: 0,
+      cto: 0,
+      dividends: 0,
+      almost: 0,
+      graduated: 0,
+      banned: 0,
+    };
+    for (const t of tokens) {
+      if (t.isBanned) {
+        counts.banned += 1;
+        continue;
+      }
+      counts.all += 1;
+      if (isNewToken(t)) counts.new += 1;
+      if (isCtoToken(t)) counts.cto += 1;
+      if (t.paysDividends) counts.dividends += 1;
+      if (isAlmostGraduated(t)) counts.almost += 1;
+      if (t.graduated) counts.graduated += 1;
+    }
+    return counts;
+  }, [tokens]);
+
   const filteredTokens = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     return tokens.filter((t) => {
@@ -149,10 +215,30 @@ export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrig
         !q ||
         t.name.toLowerCase().includes(q) ||
         t.symbol.toLowerCase().includes(q);
-      const matchesFilter = filterGraduated ? t.graduated : true;
-      return matchesSearch && matchesFilter;
+      if (!matchesSearch) return false;
+
+      // Banned tokens are isolated: they only show in the "banned" tab
+      // and never appear under any other category.
+      if (filterCategory === "banned") return !!t.isBanned;
+      if (t.isBanned) return false;
+
+      switch (filterCategory) {
+        case "new":
+          return isNewToken(t);
+        case "cto":
+          return isCtoToken(t);
+        case "dividends":
+          return !!t.paysDividends;
+        case "almost":
+          return isAlmostGraduated(t);
+        case "graduated":
+          return !!t.graduated;
+        case "all":
+        default:
+          return true;
+      }
     });
-  }, [tokens, searchTerm, filterGraduated]);
+  }, [tokens, searchTerm, filterCategory]);
 
   const diagStyles =
     loadDiag?.severity === "error"
@@ -171,7 +257,7 @@ export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrig
           <h2 className="text-lg font-semibold text-white md:text-xl">Tokens</h2>
           <div className="flex items-center gap-1.5 rounded-full border border-[#2A3442] bg-[#0B0F14] px-2.5 py-1">
             <Sparkles className="h-3 w-3 text-vault-primary" />
-            <span className="text-xs font-semibold text-vault-primary">{tokens.length}</span>
+            <span className="text-xs font-semibold text-vault-primary">{categoryCounts.all}</span>
           </div>
           <button
             type="button"
@@ -185,13 +271,52 @@ export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrig
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Filter className="h-3.5 w-3.5 text-vault-primary" />
           <select
-            value={filterGraduated ? "graduated" : "all"}
-            onChange={(e) => setFilterGraduated(e.target.value === "graduated")}
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value as TokenCategory)}
             className="rounded-lg border border-[#2A3442] bg-[#0B0F14] px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-vault-primary"
           >
-            <option value="all">All</option>
-            <option value="graduated">Graduated</option>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label} ({categoryCounts[opt.value]})
+              </option>
+            ))}
           </select>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {CATEGORY_OPTIONS.map((opt) => {
+              const active = filterCategory === opt.value;
+              const count = categoryCounts[opt.value];
+              const isBannedOpt = opt.value === "banned";
+              const baseClasses =
+                "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors";
+              const activeClasses = isBannedOpt
+                ? "border-red-500/60 bg-red-500/15 text-red-200"
+                : "border-vault-primary/60 bg-vault-primary/15 text-vault-primary";
+              const idleClasses = isBannedOpt
+                ? "border-red-500/25 bg-[#0B0F14] text-red-300/80 hover:border-red-500/50 hover:text-red-200"
+                : "border-[#2A3442] bg-[#0B0F14] text-[#9CA3AF] hover:border-vault-primary/40 hover:text-white";
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setFilterCategory(opt.value)}
+                  className={`${baseClasses} ${active ? activeClasses : idleClasses}`}
+                >
+                  <span>{opt.label}</span>
+                  <span
+                    className={`rounded-full px-1.5 text-[10px] ${
+                      active
+                        ? isBannedOpt
+                          ? "bg-red-500/25 text-red-100"
+                          : "bg-vault-primary/25 text-white"
+                        : "bg-[#11161D] text-[#9CA3AF]"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -245,7 +370,11 @@ export const TokenList: React.FC<TokenListProps> = ({ onTokenSelect, refreshTrig
           </div>
           <p className="text-white text-lg font-semibold mb-2">No tokens found</p>
           <p className="text-[#9CA3AF]">
-            {searchTerm ? "Try a different search term" : "Be the first to create a token!"}
+            {searchTerm
+              ? "Try a different search term"
+              : filterCategory === "banned"
+                ? "No banned tokens."
+                : `No tokens in "${CATEGORY_OPTIONS.find((o) => o.value === filterCategory)?.label}" yet.`}
           </p>
         </div>
       )}
