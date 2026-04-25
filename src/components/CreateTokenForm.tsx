@@ -24,7 +24,7 @@ const emptyForm = () => ({
   telegram: '',
   twitter: '',
   discord: '',
-  firstBuyBnb: '0.01',
+  firstBuyBnb: '0.0001',
   lockFirstBuy: false,
   lockMonths: 12 as 3 | 6 | 12,
   dividendToken: 'none' as DividendToken,

@@ -255,7 +255,7 @@ export const useContracts = () => {
     discord: string = '',
     burnTokens: boolean = false,
     firstBuyLockTier: number = 0,
-    firstBuyBnb: string = '0.01',
+    firstBuyBnb: string = '0.0001',
     paysDividends: boolean = false,
     tax: LaunchTaxConfig
   ) => {
