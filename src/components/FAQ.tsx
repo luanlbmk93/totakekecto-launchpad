@@ -30,7 +30,7 @@ const faqData: FAQItem[] = [
   {
     question: "What are the trading fees?",
     answer:
-      "During the bonding-curve phase, fees are intentionally minimal: 0.01% goes to the protocol and 0.01% goes to the token creator (0.02% total). Fees are applied automatically on each buy/sell."
+      "During the bonding-curve phase, fees are kept low: 1% goes to the protocol and 1% goes to the token creator (2% total). Fees are applied automatically on each buy/sell."
   },
   {
     question: "How do creator tokens work?",
