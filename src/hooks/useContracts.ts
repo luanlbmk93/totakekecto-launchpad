@@ -74,7 +74,7 @@ const FACTORY_ERROR_MESSAGES: Record<string, string> = {
   NotInitialized: 'Factory not initialized (tokenDeployer address missing).',
   InsufficientValue: 'Not enough BNB sent: need at least CREATION_MIN_FEE + MIN_CREATOR_FIRST_BUY.',
   FirstBuyTooSmall:
-    'First buy below the minimum. Raise the first-buy amount (CTO lock requires 0.001 BNB minimum).',
+    'First buy below the minimum. Raise the first-buy amount (standard: 0.0001 BNB; CTO lock requires 0.5 BNB minimum).',
   InvalidLockTier: 'Invalid first-buy lock tier (allowed: 0, 1, 2, 3).',
   DexFeeCap: 'Total tax exceeds MAX_TOTAL_TAX_BPS (10%).',
   AllocSum: 'Tax allocation buckets (Funds+Burn+Dividend+LP) must sum to exactly 100% (10000 bps).',
@@ -553,8 +553,8 @@ export const useContracts = () => {
       
       // Enforce minimum based on whether CTO lock is enabled.
       if (Number(firstBuyLockTier) > 0) {
-        // CTO: enforce minCtoFirstBuyWei (fallback 0.6 BNB)
-        let minCtoWei = parseEther('0.001');
+        // CTO: enforce minCtoFirstBuyWei (fallback 0.5 BNB)
+        let minCtoWei = parseEther('0.5');
         try {
           const v = await (factory as any).minCtoFirstBuyWei?.();
           if (typeof v === 'bigint' && v > 0n) minCtoWei = v;

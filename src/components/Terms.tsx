@@ -55,7 +55,7 @@ export const Terms: React.FC = () => {
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
               <li>Creation of BEP-20 tokens (memecoins)</li>
               <li>Trading through automated bonding curves</li>
-              <li>Automatic graduation to PancakeSwap when target market cap is reached</li>
+              <li>Automatic graduation to PancakeSwap when the 13 BNB curve target is reached</li>
               <li>Transparent fee system (2% total per transaction)</li>
             </ul>
           </section>
@@ -108,6 +108,16 @@ export const Terms: React.FC = () => {
                 <h3 className="text-vault-primary font-semibold mb-2">Trading Fee</h3>
                 <p className="text-white text-2xl font-bold">2%</p>
                 <p className="text-gray-400 text-sm">1% protocol + 1% creator</p>
+              </div>
+              <div className="bg-zinc-800 rounded-xl p-4 border border-zinc-600">
+                <h3 className="text-vault-primary font-semibold mb-2">Minimum First Buy</h3>
+                <p className="text-white text-2xl font-bold">0.0001 BNB</p>
+                <p className="text-gray-400 text-sm">Standard launches · CTO launches require 0.5 BNB</p>
+              </div>
+              <div className="bg-zinc-800 rounded-xl p-4 border border-zinc-600">
+                <h3 className="text-vault-primary font-semibold mb-2">Graduation Target</h3>
+                <p className="text-white text-2xl font-bold">13 BNB</p>
+                <p className="text-gray-400 text-sm">Curve target before listing on PancakeSwap</p>
               </div>
             </div>
             <p className="text-gray-300 leading-relaxed">

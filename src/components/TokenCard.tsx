@@ -29,8 +29,8 @@ export const TokenCard: React.FC<TokenCardProps> = ({ token, onRefresh, onTokenS
   const getProgressPercent = () => {
     if (token.graduated) return 100;
     const current = parseFloat(token.realETH);
-    const target = parseFloat(token.graduationTargetEth ?? '0.01');
-    const t = Number.isFinite(target) && target > 0 ? target : 0.01;
+    const target = parseFloat(token.graduationTargetEth ?? '13');
+    const t = Number.isFinite(target) && target > 0 ? target : 13;
     return Math.min((current / t) * 100, 100);
   };
 
@@ -99,7 +99,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({ token, onRefresh, onTokenS
           <span className="text-zinc-600"> BNB</span>
           <span className="mx-1.5 text-zinc-600">·</span>
           <span className="text-zinc-400">Target</span>{' '}
-          <span className="font-medium text-white/90">{formatCurveBnb(token.graduationTargetEth ?? '0.01')}</span>
+          <span className="font-medium text-white/90">{formatCurveBnb(token.graduationTargetEth ?? '13')}</span>
           <span className="text-zinc-600"> BNB</span>
         </p>
 

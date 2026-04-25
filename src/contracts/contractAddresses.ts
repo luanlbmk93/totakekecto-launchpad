@@ -1,12 +1,12 @@
 /**
  * BSC mainnet — defaults match totavault deploy (override with VITE_* in .env).
  *
- * TokenFactory (proxy):     0x9EF2388a7218f55a374DD6d0d0aE49c8aE7b9f67
- * TokenFactory (impl):     0x25DbDB1E75eEC6B4E4b27c52EfA94ADb3b2F8981
- * ProxyAdmin:               0xf6982f4D22bD55d6eA4B3f4d66B0d66E6c1e468d
- * TokenDeployer:            0x132e68dd5C4Af9A9B629d25881f7aefa69493B98
- * BurnAgent:                0x45bF203666F9Eb8750012ef5e2C9f4deb13805F6
- * TotaVaultLocked (lock):   0x7853558aAe580f922823AE16e2dDba12DB5cB496
+ * TokenFactory (proxy):     0x7e5aC64535b06caa2FFA5a8dC3675656f2660329
+ * TokenFactory (impl):      0x184aaF6e77d2287791A7Ef86Ca582d1F5300A94c
+ * ProxyAdmin:               0x121A26e308e6BDc9b89dE739B0419B7988Ed9647
+ * TokenDeployer:            0xfEf5Cb84bA537D891606e80c3ac5De2Fdf35ba4D
+ * BurnAgent:                0x777ad30787Ba9C395Fc04230Cae8408051892F6B
+ * TotaVaultLocked (lock):   0x4eF11CF945a01961F1F8a8FdD41D50f29372612f
  *
  * Use proxy for TOKEN_FACTORY, not impl. After deploy, prefer setting VITE_TOKEN_FACTORY,
  * VITE_TOKEN_DEPLOYER, VITE_PLATFORM_TOKEN_LOCK in .env so builds do not drift.
@@ -16,11 +16,11 @@ const pick = (k: string) => env?.[k]?.trim();
 
 export const CONTRACT_ADDRESSES = {
   /** TokenFactory — use o endereço do TransparentUpgradeableProxy (não o impl). */
-  TOKEN_FACTORY: pick('VITE_TOKEN_FACTORY') || '0x9EF2388a7218f55a374DD6d0d0aE49c8aE7b9f67',
+  TOKEN_FACTORY: pick('VITE_TOKEN_FACTORY') || '0x7e5aC64535b06caa2FFA5a8dC3675656f2660329',
   /** Contract that actually does CREATE2 `new MemeCoin{salt:...}` (used for vanity mining). */
-  TOKEN_DEPLOYER: pick('VITE_TOKEN_DEPLOYER') || '0x132e68dd5C4Af9A9B629d25881f7aefa69493B98',
+  TOKEN_DEPLOYER: pick('VITE_TOKEN_DEPLOYER') || '0xfEf5Cb84bA537D891606e80c3ac5De2Fdf35ba4D',
   /** Platform lock contract — tokens here should not accrue dividends if used as `dividendExempt` at launch. */
-  PLATFORM_TOKEN_LOCK: pick('VITE_PLATFORM_TOKEN_LOCK') || '0x7853558aAe580f922823AE16e2dDba12DB5cB496',
+  PLATFORM_TOKEN_LOCK: pick('VITE_PLATFORM_TOKEN_LOCK') || '0x4eF11CF945a01961F1F8a8FdD41D50f29372612f',
 };
 
 export const PLATFORM_TOKEN_LOCK_ABI = [

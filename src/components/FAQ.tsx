@@ -21,7 +21,11 @@ const faqData: FAQItem[] = [
   },
   {
     question: "What happens when a token 'graduates'?",
-    answer: "When a token reaches the on-chain graduation target in the bonding curve, it automatically 'graduates' to PancakeSwap, gaining permanent liquidity and greater exposure."
+    answer: "When a token reaches the on-chain graduation target of 13 BNB in the bonding curve, it automatically 'graduates' to PancakeSwap, gaining permanent liquidity and greater exposure."
+  },
+  {
+    question: "What is a CTO (Community Take Over) launch?",
+    answer: "CTO launches require the creator to commit a higher first buy (minimum 0.5 BNB) which gets locked, signaling stronger commitment. Standard (non-CTO) launches only require a 0.0001 BNB minimum first buy."
   },
   {
     question: "What are the trading fees?",

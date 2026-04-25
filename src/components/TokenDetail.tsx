@@ -122,7 +122,7 @@ export const TokenDetail: React.FC<TokenDetailProps> = ({ tokenAddress, onBack }
     const raw = token?.graduationTargetEth;
     const n = raw != null ? parseFloat(raw) : NaN;
     if (Number.isFinite(n) && n > 0) return n;
-    return 0.01;
+    return 13;
   }, [token?.graduationTargetEth]);
 
   const progressPct = useMemo(() => {

@@ -76,7 +76,7 @@ export const CreateTokenForm: React.FC<CreateTokenFormProps> = ({ onSuccess, onT
 
     const firstBuyNumCheck = parseFloat(formData.firstBuyBnb) || 0;
     if (tier > 0) {
-      const CTO_MIN_BNB = 0.001;
+      const CTO_MIN_BNB = 0.5;
       if (firstBuyNumCheck < CTO_MIN_BNB) {
         toast.error(`CTO first buy must be at least ${CTO_MIN_BNB} BNB`);
         return;
@@ -297,10 +297,11 @@ export const CreateTokenForm: React.FC<CreateTokenFormProps> = ({ onSuccess, onT
               value={formData.firstBuyBnb}
               onChange={(e) => setFormData({ ...formData, firstBuyBnb: e.target.value })}
               className="w-full px-4 py-3 bg-[#11161D] border border-[#1F2937] rounded-xl text-white placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-vault-primary"
-              placeholder="0.001"
+              placeholder="0.0001"
             />
             <p className="text-xs text-[#9CA3AF] mt-1">
-              If CTO is enabled: minimum <span className="text-white font-semibold">0.001 BNB</span>.
+              Standard launches: minimum <span className="text-white font-semibold">0.0001 BNB</span>.
+              If CTO is enabled: minimum <span className="text-white font-semibold">0.5 BNB</span>.
             </p>
           </div>
 
