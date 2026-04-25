@@ -133,7 +133,9 @@ contract TokenFactory is Initializable, OwnableUpgradeable {
     uint256 public constant CREATOR_ALLOCATION = 0;
     uint256 public constant TRADING_SUPPLY     = 1_000_000_000 * 1e18;
     uint256 public constant VESTING_PERIOD     = 0;
-    /** CTO seal (creator first buy locked) — TEST CONFIG: effectively no cap (100%). */
+    /** CTO seal (creator first buy locked) — TEST CONFIG: effectively no cap (100%).
+     *  NOTE: hardcoded as 10000 in the deployed contract; the UI enforces the
+     *  intended 5% limit off-chain via FRONTEND_CTO_MAX_BPS. */
     uint16 public constant CTO_MAX_BPS = 10000;
     /** Anti-bot config: OFF (0) or 1 day only. */
     uint32 public constant ANTIBOT_MAX_DURATION_SEC = 1 days;

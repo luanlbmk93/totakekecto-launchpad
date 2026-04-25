@@ -13,6 +13,25 @@ interface CreateTokenFormProps {
 /** 0 = no lock; 1 = 3 months; 2 = 6 months; 3 = 1 year (on-chain) */
 type FirstBuyLockTier = 0 | 1 | 2 | 3;
 
+/**
+ * CTO cap enforced on the front-end.
+ *
+ * The deployed `TokenFactory` shipped with `CTO_MAX_BPS = 10000` (100%) — a
+ * leftover test config. We can't change that on-chain (it's `constant`), so we
+ * enforce the intended 5% cap here in the UI.
+ *
+ * Math (initial curve at create time):
+ *   virtualETH      = 30 BNB
+ *   virtualToken    = 1_073_000_000
+ *   target tokens   = 5% of 1B = 50_000_000
+ *   newVToken_min   = 1_073_000_000 - 50_000_000 = 1_023_000_000
+ *   newVETH         = (30 * 1.073e9) / 1.023e9 = 31.4662 BNB
+ *   netETH (5% buy) = 1.4662 BNB → grossETH ≈ 1.4666 BNB (fees ≈ 0.02%)
+ *
+ * We round down a touch to absorb any rounding/wei drift.
+ */
+const CTO_MAX_FIRST_BUY_BNB = 1.45;
+
 export type DividendToken = 'none' | 'bnb' | 'usdt';
 
 const emptyForm = () => ({
@@ -79,6 +98,10 @@ export const CreateTokenForm: React.FC<CreateTokenFormProps> = ({ onSuccess, onT
       const CTO_MIN_BNB = 0.5;
       if (firstBuyNumCheck < CTO_MIN_BNB) {
         toast.error(`CTO first buy must be at least ${CTO_MIN_BNB} BNB`);
+        return;
+      }
+      if (firstBuyNumCheck > CTO_MAX_FIRST_BUY_BNB) {
+        toast.error(`CTO first buy cannot exceed ${CTO_MAX_FIRST_BUY_BNB} BNB (5% of supply cap)`);
         return;
       }
     }
@@ -301,7 +324,9 @@ export const CreateTokenForm: React.FC<CreateTokenFormProps> = ({ onSuccess, onT
             />
             <p className="text-xs text-[#9CA3AF] mt-1">
               Standard launches: minimum <span className="text-white font-semibold">0.0001 BNB</span>.
-              If CTO is enabled: minimum <span className="text-white font-semibold">0.5 BNB</span>.
+              If CTO is enabled: between <span className="text-white font-semibold">0.5 BNB</span> and{' '}
+              <span className="text-white font-semibold">{CTO_MAX_FIRST_BUY_BNB} BNB</span>{' '}
+              <span className="text-[#6B7280]">(5% of supply cap)</span>.
             </p>
           </div>
 
